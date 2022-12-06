@@ -6,7 +6,7 @@ import json
 import random
 # from replit import db
 db = {}
-
+# dictionary
 
 intents = discord.Intents.default()
 intents.message_content = True
