@@ -1,12 +1,12 @@
-# This example requires the 'message_content' intent.
-#########################################
 import discord
+# import os
 import requests
 import json
 import random
 # from replit import db
 db = {}
-# dictionary
+
+# my_secret = os.environ['token']
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -41,7 +41,7 @@ def del_encrg(index):
     encrgs = db["encouragements"]
     if (len(encrgs) > index):
         del encrgs[index]
-        db["encouragements"] = encrgs
+    db["encouragements"] = encrgs
 
 
 @client.event
@@ -55,8 +55,13 @@ async def on_message(message):
 
     async def read_encrgs(x):
         k = list(x)
-        for i in k:
-            await message.channel.send(i)
+        if (len(k) > 0):
+            await message.channel.send("The remaining element/s are -")
+            for i in k:
+                await message.channel.send(i)
+        else:
+            del db["encouragements"]
+            await message.channel.send("The list is now empty!")
 
     if (message.author == client.user):
         return
@@ -86,10 +91,14 @@ async def on_message(message):
             index = int(msg.split("$del ", 1)[1])
             del_encrg(index)
             encrgs = db["encouragements"]
+
         await read_encrgs(encrgs)
+
+# After deleting the last manualy added encgment, the clr command should say that there are no manual encrgmnts present.
 
     if (msg.startswith("$clr")):
         if ("encouragements" in db.keys()):
+            # if (len(list(db["encouragements"]))>0):
             del db["encouragements"]
             await message.channel.send("The manualy added encouragements have been cleared!")
         else:
@@ -102,5 +111,4 @@ async def on_message(message):
             await message.channel.send("There are no manual encouragements present.")
 
 
-client.run(
-    'MTA0ODc5NjE1ODMwODM5NzA5Ng.Gergu9.Csb-psYzSnGPFqfZneXaGqN-0S-4KfevWPCdNU')
+client.run("<Your token here>")
